@@ -1,4 +1,5 @@
 <template>
+   <button @click="clearCache">Очистить кэш</button>
    <div v-for="city in savedCity" :key="city.id">
       <city-card :city="city" @click="goToCityView(city)"></city-card>
    </div>
@@ -58,6 +59,12 @@ const getCities = async () => {
 };
 
 await getCities();
+
+const clearCache = () => {
+   localStorage.removeItem('savedCity');
+   savedCity.value = []; // Очистка текущего состояния
+   console.log('Cache cleared. Saved cities reset to empty.');
+};
 
 const router = useRouter();
 
