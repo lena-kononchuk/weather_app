@@ -3,8 +3,7 @@
       <city-card :city="city" @click="goToCityView(city)"></city-card>
    </div>
    <p v-if="savedCity.length === 0">
-      No locations added. To start tracking a location, search in
-      the field above.
+      No locations added. To start tracking a location, search in the field above.
    </p>
 </template>
 
@@ -12,43 +11,51 @@
 import axios from 'axios';
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import CityCard from "../components/CityCard.vue"
+import CityCard from "../components/CityCard.vue";
 
-// Define reactive reference to store saved cities
+// Создание реактивной ссылки для хранения сохраненных городов
 const savedCity = ref([]);
 
-// Define an async function to fetch weather data
+// Асинхронная функция для получения данных о погоде
 const getCities = async () => {
-   // Check if there are saved cities in localStorage
+   // Проверка наличия сохраненных городов в localStorage
    if (localStorage.getItem('savedCity')) {
       savedCity.value = JSON.parse(localStorage.getItem('savedCity'));
 
-      const requests = [];
-      // Push each API request into the requests array
-      savedCity.value.forEach((city) => {
-         requests.push(
-            axios.get(
-               `https://api.openweathermap.org/data/2.5/weather?lat=${city.coords.lat}&lon=${city.coords.lng}&appid=7288c10f83a369a476806c4d72a10cbc&units=imperial`
-            )
-         );
+      const requests = savedCity.value.map((city) => {
+         return axios.get('https://api.openweathermap.org/data/2.5/weather', {
+            params: {
+               lat: city.coords.lat, // Широта города
+               lon: city.coords.lng, // Долгота города
+               appid: '7288c10f83a369a476806c4d72a10cbc', // Ваш ключ API
+               units: 'metric' // Установка единиц измерения на метрические
+            }
+         });
       });
 
-      // Use await to handle all promises concurrently
-      const weatherData = await Promise.all(requests);
-      await new Promise((res) => setTimeout(res, 1000))
+      try {
+         // Ожидание выполнения всех запросов параллельно
+         const weatherData = await Promise.all(requests);
+         await new Promise((res) => setTimeout(res, 1000)); // Задержка в 1 секунду
 
-      // Assign weather data to each city object in savedCity array
-      weatherData.forEach((value, index) => {
-         savedCity.value[index].weather = value.data;
-      });
+         // Присвоение данных о погоде каждому объекту города
+         weatherData.forEach((value, index) => {
+            savedCity.value[index].weather = value.data;
+         });
 
-      console.log('Weather data for saved cities:', savedCity.value);
+         console.log('Weather data for saved cities:', savedCity.value);
+      } catch (error) {
+         console.error('Error fetching weather data:', error);
+      }
    }
 };
 
+// Вызов функции при инициализации компонента
 await getCities();
 
 const router = useRouter();
+
+// Функция для перехода к представлению города
 const goToCityView = (city) => {
    router.push({
       name: "cityView",
