@@ -78,5 +78,3 @@ const getSearchResults = () => {
   }, 300);
 };
 </script>
-
-<style lang="scss" scoped></style>

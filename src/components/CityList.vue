@@ -28,7 +28,7 @@ const getCities = async () => {
       savedCity.value.forEach((city) => {
          requests.push(
             axios.get(
-               `https://api.openweathermap.org/data/2.5/weather?lat=${city.coords.lat}&lon=${city.coords.lng}&appid=7288c10f83a369a476806c4d72a10cbc`
+               `https://api.openweathermap.org/data/2.5/weather?lat=${city.coords.lat}&lon=${city.coords.lng}&appid=7288c10f83a369a476806c4d72a10cbc&units=imperial`
             )
          );
       });
