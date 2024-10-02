@@ -122,8 +122,8 @@ const getWeatherData = async () => {
             lon: route.query.lng, // Get longitude from query parameters
             exclude: 'minutely', // Exclude minutely data
             appid: '7288c10f83a369a476806c4d72a10cbc', // API key for authentication
-            units: 'imperial' // Set temperature units to imperial
-         } // Ensure this line ends with a comma if there are more properties to follow
+            units: 'metric' // Set temperature units to imperial
+         }
       }
       );
 
@@ -140,8 +140,7 @@ const getWeatherData = async () => {
             utc + 1000 * weatherResponse.data.timezone_offset; // Store adjusted hourly time
       });
 
-      // Log processed weather data for debugging
-      console.log('Processed Weather Data:', weatherResponse.data);
+
 
 
       await new Promise((res) => setTimeout(res, 1000));
@@ -161,12 +160,12 @@ const router = useRouter(); // Get router instance
 
 // Function to remove a city from local storage
 const removeCity = () => {
-   const cities = JSON.parse(localStorage.getItem("savedCities")); // Get saved cities from local storage
+   const cities = JSON.parse(localStorage.getItem("savedCity")); // Get saved cities from local storage
    const updatedCities = cities.filter(
       (city) => city.id !== route.query.id // Filter out the city to remove
    );
    localStorage.setItem(
-      "savedCities",
+      "savedCity",
       JSON.stringify(updatedCities) // Update local storage with remaining cities
    );
    router.push({
