@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col min-h-screen font-Roboto bg-weather-primary">
-    <SiteNavigation />
+    <Navigation />
     <RouterView class="flex-1" v-slot="{ Component }">
       <Transition name="page">
         <component :is="Component" />
@@ -11,7 +11,7 @@
 
 <script setup>
 import { RouterView } from "vue-router";
-import SiteNavigation from "./components/Navigation.vue";
+import Navigation from "./components/Navigation.vue";
 </script>
 
 <style>
