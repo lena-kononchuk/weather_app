@@ -21,9 +21,9 @@
     </div>
     <div class="flex flex-col gap-4">
       <Suspense>
-        <CityList />
+        <city-list></city-list>
         <template #fallback>
-          <CityCardSkeleton />
+          <city-card-skeleton></city-card-skeleton>
         </template>
       </Suspense>
     </div>
@@ -34,7 +34,8 @@
 import { ref } from "vue";
 import axios from "axios";
 import { useRouter } from "vue-router";
-
+import CityList from "../components/CityList.vue"
+import CityCardSkeleton from "../components/CityCardSkeleton.vue"
 
 const router = useRouter();
 const previewCity = (searchResult) => {

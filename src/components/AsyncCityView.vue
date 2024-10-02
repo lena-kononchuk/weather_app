@@ -99,6 +99,9 @@
             </div>
          </div>
       </div>
+
+      <div @click="removeCity"
+         class="flex items-center gap-2 text-white cursor-pointer duration-150 hover:text-red-500"></div>
    </div>
 </template>
 
@@ -140,7 +143,11 @@ const getWeatherData = async () => {
       // Log processed weather data for debugging
       console.log('Processed Weather Data:', weatherResponse.data);
 
+
+      await new Promise((res) => setTimeout(res, 1000));
+
       return weatherResponse.data; // Return the processed weather data
+
    } catch (err) {
       // Handle errors during the API request
       console.error('Error fetching data:', err.response ? err.response.data : err.message);

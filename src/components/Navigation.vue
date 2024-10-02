@@ -80,6 +80,7 @@ const addCity = () => {
 
    let query = Object.assign({}, route.query);
    delete query.preview;
+   query.id = locationObg.id;
    router.replace({ query })
 };
 const modalActive = ref(null);
