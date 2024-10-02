@@ -6,10 +6,9 @@
       No locations added. To start tracking a location, search in the field above.
    </p>
 </template>
-
 <script setup>
 import axios from 'axios';
-import { ref, onMounted } from 'vue';
+import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import CityCard from "../components/CityCard.vue";
 
@@ -20,16 +19,26 @@ const getCities = async () => {
       savedCity.value = JSON.parse(localStorage.getItem('savedCity'));
 
       const requests = savedCity.value.map((city) => {
-         console.log('Fetching data for:', city.coords);
+         // Преобразование строк в числа
+         const lat = parseFloat(city.coords.lat);
+         const lon = parseFloat(city.coords.lng);
+         console.log('Fetching data for:', { lat, lon }); // Лог для отладки
+
+         // Проверка валидности координат
+         if (isNaN(lat) || isNaN(lon)) {
+            console.error(`Invalid coordinates for city ${city.city}: lat = ${lat}, lon = ${lon}`);
+            return null; // Возвращаем null для недействительных координат
+         }
+
          return axios.get('https://api.openweathermap.org/data/2.5/weather', {
             params: {
-               lat: city.coords.lat,
-               lon: city.coords.lng,
+               lat,
+               lon,
                appid: '7288c10f83a369a476806c4d72a10cbc',
                units: 'metric'
             }
          });
-      });
+      }).filter(request => request !== null); // Фильтрация недействительных запросов
 
       try {
          const weatherData = await Promise.all(requests);
@@ -41,14 +50,10 @@ const getCities = async () => {
 
          console.log('Weather data for saved cities:', savedCity.value);
       } catch (error) {
-         if (error.response) {
-            console.error('Error fetching weather data:', error.response.data);
-         } else if (error.request) {
-            console.error('No response received:', error.request);
-         } else {
-            console.error('Error:', error.message);
-         }
+         console.error('Error fetching weather data:', error.response ? error.response.data : error.message);
       }
+   } else {
+      console.log('No saved cities found in localStorage.');
    }
 };
 
