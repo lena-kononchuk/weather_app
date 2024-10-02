@@ -6,10 +6,10 @@ import vue from "@vitejs/plugin-vue";
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [vue()],
+base: '/weather_app/',  
   resolve: {
     alias: {
-      // "@": fileURLToPath(new URL("./src", import.meta.url)),
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
-   base: '/weather_app/', 
 });
